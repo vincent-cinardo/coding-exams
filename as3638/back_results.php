@@ -6,7 +6,7 @@
       include './php/dblogin.php';
       $student = $_POST['student'];
   
-      $result = mysqli_query($con, "SELECT DISTINCT eid, student FROM `Grades` WHERE student='$student'");
+      $result = mysqli_query($con, "SELECT DISTINCT `Grades`.eid, student, name FROM `Grades`, `Exam` WHERE student='$student' AND Exam.number = Grades.eid");
       
       $exams = [];
       while($exam = mysqli_fetch_assoc($result))

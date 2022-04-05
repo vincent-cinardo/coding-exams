@@ -20,10 +20,10 @@
         {
           $eid = $grade['eid'];
           $student = $grade['student'];
-          $question = $grade['question'];
-          $answer = $grade['answer'];
+          $question = mysqli_real_escape_string($con, $grade['question']);
+          $answer = mysqli_real_escape_string($con, $grade['answer']);
           $score = $grade['score'];
-          $comments = $grade['comments'];
+          $comments = mysqli_real_escape_string($con, $grade['comments']);
           $feedback = mysqli_real_escape_string($con, $grade['feedback']);
           
           mysqli_query($con, "INSERT INTO `Grades`(`eid`, `student`, `question`, `answer`, `score`, `comments`, `feedback`) VALUES ($eid, '$student', '$question', '$answer', $score, '$comments', '$feedback');");

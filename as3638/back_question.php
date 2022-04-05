@@ -4,10 +4,10 @@
     
     if( !empty($_POST['question']) && !empty($_POST['answer']) && !empty($_POST['difficulty']) && !empty($_POST['testcases']) && !empty($_POST['type']) ) 
     {
-      $question = $_POST['question'];
-      $answer = $_POST['answer'];
+      $question = mysqli_real_escape_string($con, $_POST['question']);
+      $answer = mysqli_real_escape_string($con, $_POST['answer']);
       $difficulty = $_POST['difficulty'];
-      $testcases = $_POST['testcases'];
+      $testcases = mysqli_real_escape_string($con, $_POST['testcases']);
       $type = $_POST['type'];
       
       //Con is connection to database in login.php
