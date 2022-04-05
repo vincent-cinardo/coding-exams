@@ -6,8 +6,9 @@
     $answer = $_POST['answer'];
     $difficulty = $_POST['difficulty'];
     $testcases = $_POST['testcases'];
+    $type = $_POST['type'];
 
-    if(!empty($question) && !empty($answer) && !empty($difficulty) && !empty($testcases)) {
+    if(!empty($question) && !empty($answer) && !empty($difficulty)) {
       #Before sending, need to check the question for syntax errors.
       
       #Make a python file
@@ -24,11 +25,11 @@
         exit();
       }
     
-      #$curl = curl_init("https://afsaccess4.njit.edu/~as3638/backend.php"); #use new address depending on backend
-      $curl = curl_init("https://afsaccess4.njit.edu/~as3638/questioninput.php"); #use new address depending on backend
+      $curl = curl_init("https://afsaccess4.njit.edu/~vmc4/back_question.php"); #use new address depending on backend
+      #$curl = curl_init("https://afsaccess4.njit.edu/~as3638/questioninput.php"); #use new address depending on backend
       curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
       curl_setopt($curl, CURLOPT_POST, true);
-      curl_setopt($curl, CURLOPT_POSTFIELDS, array("question" => $question, "answer" => $answer, "difficulty" => $difficulty, "testcases" => $testcases));
+      curl_setopt($curl, CURLOPT_POSTFIELDS, array("question" => $question, "answer" => $answer, "difficulty" => $difficulty, "testcases" => $testcases, "type" => $type));
 
       $result = curl_exec($curl);
       
