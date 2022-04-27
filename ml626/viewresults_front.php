@@ -23,9 +23,9 @@
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
+  <link rel="stylesheet" href="page.css">
   <title>Exams</title>
   
   <style>
@@ -36,6 +36,7 @@
 
     table, th, td {
       border: 1px solid;
+      border-color: white;
     }
     
   </style>
@@ -50,124 +51,57 @@
         echo "<h3>" . $c . ". " . $value["question"] . " " . $value['score'] ."/". $value['max_score'] . "</h3>";
         echo "<p>Student Answer: ".$value["student_answer"]."</p>";
         echo "<p>Correct Answer: ".$value["correct_answer"]."</p>";
+        
+        echo "<table style=\"width: 30%;\">";
+        
+        echo "<tr><th>Test Case</th> <th>Expected</th> <th>Answer</th> <th>Score</th></tr>";
+        
+        foreach(explode("%", $value['feedback']) as $feedback)
+        {
+          
+          if(!empty($feedback[0]))
+          {
+            $feedback = explode("_", $feedback);
+            echo "<tr><td>";
+            echo $feedback[0];
+            echo "</td>";
+            
+            echo "<td>";
+            echo $feedback[1];
+            echo "</td>";
+            
+            echo "<td>";
+            echo $feedback[2];
+            echo "</td>";
+            
+            $color = "#FFCCCB";
+            
+            if($feedback[3] > 0)
+            {
+              $color = "#90EE90";
+            }
+            
+            echo "<td style=\"text-align: center; background-color: $color; color: black; width: 10%;\">";
+            echo round($feedback[3], 2);
+            echo "</td></tr>";
+          }
+        }
+        
+        echo "<tr><td style=\"text-align: center;\" colspan=\"3\">"."Total"."</td><td style=\"text-align: center;\">".$value['score']."</td></tr>";
+        
+        echo "</table>";
+        
         echo "<p>Comments</p><textarea readonly name=textarea$c rows=5 cols=60>" . $value["comments"] . "</textarea><br><br>";
         
         $c++;
       }
     ?>
     </div>
-    
-    <div style="flex:1;">
-      
-      <?php
-        $types = array(); //switch probably not needed, we can delete after we ask
-        
-        foreach($decoded as $value)
-        {
-          if(!in_array($value['type'], $types))
-          {
-            $types[] = $value['type'];
-          }
-        }
-        
-        foreach($types as $type)
-        {
-          
-          $difficulties = array();
-          
-          foreach($decoded as $value)
-          {
-            if(!in_array($value['difficulty'], $difficulties))
-            {
-              $difficulties[] = $value['difficulty'];
-            }
-          }
-          
-          echo "<table style=\"width: 100%;\">";
-          echo "<tr>";
-            switch($type)
-            {
-              case "for":
-                echo "<td colspan=100 style=\"text-align: center;\"><h3>For Loops</h3></td>";
-                break;
-              case "while":
-                echo "<td colspan=100 style=\"text-align: center;\"><h3>While Loops</h3></td>";
-                break;
-              case "switch":
-                echo "<td colspan=100 style=\"text-align: center;\"><h3>Switch Statements</h3></td>";
-                break;
-              case "arithmetic":
-                echo "<td colspan=100 style=\"text-align: center;\"><h3>Arithmetic</h3></td>";
-                break;                
-              case "recursion":
-                echo "<td colspan=100 style=\"text-align: center;\"><h3>Recursion</h3></td>";
-                break;
-              case "string":
-                echo "<td colspan=100 style=\"text-align: center;\"><h3>Strings</h3></td>";
-                break;
-            }
-          echo "</tr>";
-          
-          foreach($difficulties as $difficulty)
-          {
-            echo "<tr>";
-            
-            switch($difficulty)
-            {
-              case "EASY":
-                echo "<td rowspan=100 style=\"text-align: center; width: 15%;\"><h4>Easy</h4></td>";
-                break;
-              case "MEDIUM":
-                echo "<td rowspan=100 style=\"text-align: center; width: 15%;\"><h4>Medium</h4></td>";
-                break;
-              case "HARD":
-                echo "<td rowspan=100 style=\"text-align: center; width: 15%;\"><h4>Hard</h4></td>";
-                break;
-            }
-            
-            echo "</tr>";
-            
-            foreach($decoded as $value)
-            {
-              if($value['difficulty'] == $difficulty && $value['type'] == $type)
-              {
-                echo "<tr><td colspan=100>Question: " . $value['question'] . "</td></tr>";
-                foreach(explode("%", $value['feedback']) as $feedback)
-                {
-                  
-                  if(!empty($feedback[0]))
-                  {
-                    $feedback = explode("_", $feedback);
-                    echo "<tr><td>";
-                    echo $feedback[0];
-                    echo "</td>";
-                    
-                    $color = "red";
-                    
-                    if(preg_match('/\+/', $feedback[1]))
-                    {
-                      $color = "green";
-                    }
-                    
-                    echo "<td style=\"text-align: center; background-color: $color; color: black; width: 10%;\">";
-                    echo $feedback[1];
-                    echo "</td></tr>";
-                  }
-                }
-              }
-            }
-          }
-          
-          echo "</table>";
-        }
-        
-      ?>
-      
-    </div>
   </div>
   
-  <br><br>
-  <a href="https://afsaccess4.njit.edu/~ml626/viewresults.php">Back</a>
+  <a href="https://afsaccess4.njit.edu/~ml626/viewresults.php">
+    <input type="button" value="Back" id="button-back" class="button">
+  </a>
 </body>
 
 </html>

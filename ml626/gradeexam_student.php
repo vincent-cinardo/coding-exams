@@ -11,15 +11,12 @@
   curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
   curl_setopt($curl, CURLOPT_URL, "https://afsaccess4.njit.edu/~vmc4/middle_autograde.php");
   curl_setopt($curl, CURLOPT_POST, true);
-  //curl_setopt($curl, CURLOPT_POSTFIELDS, array("eid" => $_SESSION["gexams"][$_POST["exams"]]["eid"], "student" => $_SESSION["gexams"][$_POST["exams"]]["student"]));
   curl_setopt($curl, CURLOPT_POSTFIELDS, array("eid" => $_POST['exams'], "student" => $_POST['student']));
   
   $result = curl_exec($curl);
-  //echo var_dump($result); //NOTE THE ARRAY THAT COMES BACK DOES NOT HAVE STUDENT IN IT. We don't need anyway but idk wby this is happening
   $decoded = json_decode($result, true);
   
-  //echo $_POST['student'] . " This is post";
-  //echo $decoded['student'] . " This is decoded";
+  #echo var_dump($result);
   
   curl_close($curl);
   
@@ -35,6 +32,7 @@
 
 <head>
   <meta charset="UTF-8">
+  <link rel="stylesheet" href="page.css">
   <title>Exams</title>
   
   <style>
@@ -43,36 +41,43 @@
   }
   
   table {
-    border: 1px solid black;
-    width: 30%;
+    border: 1px solid;
+    border-color: white;
+    width: 40%;
   }
   
-  td {
-    border: 1px solid black;
+  td, th {
+    border: 1px solid;
+    border-color: white;
   }
   </style>
+  
+  <script>
+    function()
+    {
+    
+    }
+  </script>
+  
 </head>
 
 <body>
     
-  <form method="post" action="/~ml626/gradeexam_finalize.php">
+  <form method="post" action="/~ml626/gradeexam_finalize.php" name="scores">
     <?php
-    if($result)
-    {
-    
-    
-    }
+      $index = 0;
       foreach($decoded as $value)
       {  
-        $score = $value['max_score'];
-        echo "<h3>" . $c . ". " . $value["question"] . " $score Points"."</h3>";
+        echo "<h3>" . $c . ". " . $value["question"] . " " . $value['score'] . "/" . $value['max_score'] . " Points"."</h3>";
         echo "<p>Student Answer: ".$value["student_answer"]."</p>";
         echo "<p>Correct Answer: ".$value["correct_answer"]."</p>";
+        echo "<p>Constraint: ".$value["constraint"]."</p>";
         echo "<table>";
-        echo "<tr>";
-          echo "<td colspan=\"2\" style=\"width: 100%;\">Scores</td>";
-        echo "</tr>";
-        
+        echo "<tr>
+          <th>Test Case</th> <th>Expected</th> <th>Answer</th> <th>Score</th>
+        </tr>";
+    
+          
           foreach(explode("%", $value['feedback']) as $feedback)
           {
             $parsed = explode("_", $feedback);
@@ -82,26 +87,29 @@
               echo "<td>";
               echo $parsed[0];
               echo "</td>";
-              echo "<td style=\"width: 10%; text-align:center;\">";
+              echo "<td style=\"width: 20%; text-align:center;\">";
               echo $parsed[1];
               echo "</td>";
+              echo "<td style=\"width: 20%; text-align:center;\">";
+              echo $parsed[2];
+              echo "</td>";
+              echo "<td style=\"width: 20%; text-align:center;\">";
+              echo "<input style=\"width: 92%; text-align:center;\" value=\"" . round(htmlspecialchars($parsed[3]), 2) . "\" name=\"scores[$index][score][]\">";
+              echo "<input type=\"hidden\" value=\"" . htmlspecialchars($parsed[0]) . "_" . htmlspecialchars($parsed[1]) . "_" . htmlspecialchars($parsed[2]) . "\" name=\"scores[$index][feedback][]\">";
+
+              echo "</td>";
               echo "</tr>";
-            }
+            }   
           }
-          
-          echo "<tr>";
-          echo "<td>Total Score (edit)</td>";
-          echo "<td> " . "<input style=\"width: 100px; text-align: center;\" value=" . $value["score"] . " name=score$c>" . "</td>";
-          echo "</tr>";
-        
+          $index++;
+         echo "<tr><td style=\"text-align: center;\" colspan=\"3\">"."Total"."</td><td style=\"text-align: center;\">".$value['score']."</td></tr>";
         echo "</table>";
         echo "<p>Comments</p><textarea name=textarea$c rows=5 cols=60></textarea><br><br>";
         $c++;
       }
       
       echo "<input type=\"hidden\" id=\"student\" name=\"student\" value=\"".$_POST['student']."\">";
-      echo "<br><br>";
-      echo "<input type=\"submit\" value=\"Finalize Scores\">";
+      echo "<input type=\"submit\" value=\"Finalize Scores\" class=\"button\">";
       echo "</form>";
     //}
   ?>

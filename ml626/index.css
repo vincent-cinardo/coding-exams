@@ -9,7 +9,7 @@ body {
   display: grid;
   justify-items: center;
   align-items: center;
-  background-color: #202020;
+  background-color: #1D1E22;
 }
 
 #main-holder {
@@ -48,7 +48,7 @@ body {
   border-radius: 2px;
   color: white;
   font-weight: bold;
-  background-color: #505050;
+  background-color: #3D3E42;
   cursor: pointer;
   outline: none;
 }

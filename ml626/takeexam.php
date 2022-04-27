@@ -24,9 +24,10 @@
 
 <head>
   <meta charset="UTF-8">
+  <link rel="stylesheet" href="page.css">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Take Exam</title>  
-  <h1>Take Exam</h1>
+  <h4>Take Exam</h4>
   <p>Please select an exam to take.</p>  
 </head>
 
@@ -40,11 +41,12 @@
       ?>
     </select><br><br>
           
-    <input type="submit" name="take" id="take" value="Take Exam">
+    <input type="submit" name="take" id="take" value="Take Exam" class="button">
   </form>
   
-  <br><br>
-  <a href="https://afsaccess4.njit.edu/~ml626/student.php">Back</a>
+  <a href="https://afsaccess4.njit.edu/~ml626/student.php">
+    <input type="button" value="Back" id="button-back" class="button">
+  </a>
 </body>
 
 </html>

@@ -28,9 +28,10 @@
 
 <head>
   <meta charset="UTF-8">
+  <link rel="stylesheet" href="page.css">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>View Results</title>  
-  <h1>View Results</h1>
+  <h4>View Results</h4>
   <p>Please select an exam to review.</p>  
 </head>
 
@@ -45,11 +46,11 @@
       ?>
     </select><br><br>
           
-    <input type="submit" name="view" id="view" value="View">
+    <input type="submit" name="view" id="view" value="View Results" class="button">
   </form>
-  
-  <br><br>
-  <a href="https://afsaccess4.njit.edu/~ml626/student.php">Back</a>
+  <a href="https://afsaccess4.njit.edu/~ml626/student.php">
+    <input type="button" value="Back" id="button-back" class="button">
+  </a>
 </body>
 
 </html>

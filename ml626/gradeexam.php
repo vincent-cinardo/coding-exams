@@ -30,8 +30,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="page.css">
   <title>Grade Exams</title>  
-  <h1>Grade Exams</h1>
+  <h4>Grade Exams</h4>
   <p>Please select an exam to grade.</p>  
 </head>
 
@@ -49,11 +50,12 @@
       echo "<input type=\"hidden\" id=\"student\" name=\"student\" value=".$value["student"].">";
     ?>
     
-    <input type="submit" name="grade" id="grade" value="Grade Exam">
+    <input type="submit" name="grade" id="grade" value="Grade Exam" class="button">
   </form>
-    
-  <br><br>
-  <a href="https://afsaccess4.njit.edu/~ml626/teacher.php">Back</a>
+  
+  <a href="https://afsaccess4.njit.edu/~ml626/teacher.php">
+    <input type="button" value="Back" id="button-back" class="button">
+  </a>
 </body>
 
 </html>

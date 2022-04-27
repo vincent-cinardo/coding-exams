@@ -25,8 +25,26 @@
   $decoded = json_decode($result, true);
   
   curl_close($curl);
-  
-  echo $result;
-  echo "<br><br>";
-  echo "<a href='https://afsaccess4.njit.edu/~ml626/student.php'>Back</a>";
 ?>
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="page.css">  <title>Submit Exam Result</title>
+  <h4>Submit Exam Result</h4>
+</head>
+
+<body>
+  <?php
+    echo "<p>" . $result . "</p>";
+    echo "<br>";
+    echo "<a href='https://afsaccess4.njit.edu/~ml626/student.php'>
+            <input type='button' value='Back' id='button-back' class='button'>
+          </a>";
+  ?>
+</body>
+
+</html>
