@@ -3,7 +3,8 @@
     
     $curl = curl_init(); 
     #$curl = curl_init("https://afsaccess4.njit.edu/~as3638/questionsend.php");
-    curl_setopt($curl, CURLOPT_URL, "https://afsaccess4.njit.edu/~vmc4/back_bank.php");
+    curl_setopt($curl, CURLOPT_URL, "https://afsaccess4.njit.edu/~as3638/back_bank.php");
+    //curl_setopt($curl, CURLOPT_URL, "https://afsaccess4.njit.edu/~vmc4/back_bank.php");
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($curl, CURLOPT_POST, true);
     curl_setopt($curl, CURLOPT_POSTFIELDS, 0);

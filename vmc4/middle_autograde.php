@@ -4,8 +4,8 @@
   if($_SERVER['REQUEST_METHOD'] === "POST") {
     if(!empty($_POST['eid']) && !empty($_POST['student'])) {
       #AKHIL: Use new address depending on backend
-      #$curl = curl_init("https://afsaccess4.njit.edu/~as3638/back_autograde.php");
-      $curl = curl_init("https://afsaccess4.njit.edu/~vmc4/back_autograde.php");
+      $curl = curl_init("https://afsaccess4.njit.edu/~as3638/back_autograde.php");
+      #$curl = curl_init("https://afsaccess4.njit.edu/~vmc4/back_autograde.php");
       curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
       curl_setopt($curl, CURLOPT_POST, true);
       curl_setopt($curl, CURLOPT_POSTFIELDS, array('eid' => $_POST['eid'], 'student' => $_POST['student']));
@@ -29,6 +29,7 @@
         $grade['student_answer'] = $case['student_answer'];
         $grade['correct_answer'] = $case['correct_answer'];
         $grade['type'] = $case['type'];
+        $grade['constraint'] = $case['constraint'];
         $grade['feedback'] = '';
         $correct = $case['correct_answer'];
         $student = $case['student_answer'];
@@ -80,93 +81,68 @@
         if($student_name == $correct_name)
         {
           $grade['score'] = 0.1 * $case['score'];
-          $grade['feedback'] .= "Method name ".$grade['student_def']." matches ".$grade['correct_def']."_+$score%";
+          $grade['feedback'] .= "Method name_".$grade['correct_def']."_".$grade['student_def']."_$score%";
         }
         else
         {
-          $grade['feedback'] .= "Method name ".$grade['student_def']." does not match ".$grade['correct_def']."_-$score%";
+          $grade['feedback'] .= "Method name_".$grade['correct_def']."_".$grade['student_def']."_0%";
         }
         
         //Checks if student code contains the type. If type exists, 
         //reserve 10% of the max_point for the type. If it is of normal type, the weight is 90% for testcases.
         $percentage = 0.8;
+        $iscorrect = "True";
         
-        switch($grade['type'])
+        switch($grade['constraint'])
         {
           case 'for':
             if(preg_match("/for.*:/", $grade['student_answer']))
             {
               $grade['score'] += 0.1 * $case['score'];
-              $grade['feedback'] .= "Found for...: in the answer._+$score%";
             }
             else
             {
-              $grade['feedback'] .= "Did not find for...: in the answer._+$score%";
+              $score=0;
+              $iscorrect = "False";
             }
-            
+            $grade['feedback'] .= "Uses for loop._for...:_"."$iscorrect"."_$score%";
             break;
           case 'while':
             if(preg_match("/while.*:/", $grade['student_answer']))
             {
               $grade['score'] += 0.1 * $case['score'];
-              $grade['feedback'] .= "Found while...: in the answer._+$score%";
             }
             else
             {
-              $grade['feedback'] .= "Did not find while...: in the answer._-$score%";
+              $score=0;
+              $iscorrect = "False";
             }
-            break;
-          case 'switch': //Dont think python has switch statments, ask professor
-            if(preg_match("/switch.*:/", $grade['student_answer']))
-            {
-              $grade['score'] += 0.1 * $case['score'];
-              $grade['feedback'] .= "Found switch...: in the answer._+$score%";
-            }
-            else
-            {
-              $grade['feedback'] .= "Did not find switch...: in the answer._-$score%";
-            }
-            break;
-          case 'arithmetic':
-            if(preg_match('/[-\+\/\*]/', $grade['student_answer']))
-            {
-              $grade['score'] += 0.1 * $case['score'];
-              $grade['feedback'] .= "Detected the use of arithemtic in the answer._+$score%";
-            }
-            else
-            {
-              $grade['feedback'] .= "Did not detect the use of arithemtic in the answer._-$score%";
-            }
+            $grade['feedback'] .= "Uses while loop._while...:_"."$iscorrect"."_$score%";
             break;
           case 'recursion':
-            if(preg_match("/$def.*$def/", $grade['student_answer']))
+            if(preg_match_all("/".$student_name."/", $grade['student_answer']) > 1)
             {
               $grade['score'] += 0.1 * $case['score'];
-              $grade['feedback'] .= "Detected the use of recursion in the answer._+$score%";
             }
             else
             {
-              $grade['feedback'] .= "Did not detect the use of recursion in the answer._-$score%";
+              $score=0;
+              $iscorrect = "False";
             }
-            break;
-          case 'string':
-            if(preg_match("/\".*\"/", $grade['student_answer']) || preg_match("/\'.*\'/", $grade['student_answer'])) 
-              //This does not work correctly FIX
-            {
-              $grade['score'] += 0.1 * $case['score'];
-              $grade['feedback'] .= "Detected a string in the answer._+$score%";
-            }
-            else
-            {
-              $grade['feedback'] .= "Did not detect a string in the answer._-$score%";
-            }
+            $grade['feedback'] .= "Is a recursive function._Function calls itself._"."$iscorrect"."_$score%";
             break;
           default:
             $percentage = 0.9;
         }
         
         //Max points for each test case possible.
-        $testcases = explode(",", $case['testcases']);
+        
+        $testcases = preg_replace('/^ */', '', $case['testcases']);
+        $testcases = preg_replace('/  +/', ' ', $testcases);
+        $testcases = preg_replace('/ + /', ' ', $testcases);
+        $testcases = preg_replace('/,+ +/', ',', $testcases);
+        $testcases = preg_replace('/ *,+ *$/', '', $testcases);
+        $testcases = explode(",", preg_replace('/ *,+ */', ',', $testcases));
         $max_point = ($percentage * $case["score"]) / count($testcases);
         
         foreach($testcases as $testcase)
@@ -223,12 +199,12 @@
           if($output_student == $output_correct)
           {
             $grade["score"] += $max_point;
-            $grade['feedback'] .= "$correct_name$final_params →	$output_student | $correct_name$final_params → $output_correct _+$max_point%";
+            $grade['feedback'] .= " $correct_name$final_params _ $output_correct _ $output_student _$max_point%";
             //$grade['feedback'] .= "$corrected_def →	$output_student | $def → $output_correct _+$max_point%";
           }
           else
           {
-            $grade['feedback'] .= "$correct_name$final_params →	$output_student | $correct_name$final_params → $output_correct _-$max_point%";
+            $grade['feedback'] .= " $correct_name$final_params _ $output_correct _ $output_student _0%";
             //$grade['feedback'] .= "$corrected_def →	$output_student | $def → $output_correct _-$max_point%";
           }
         }
